@@ -863,9 +863,28 @@ static int touchkey_firmware_update(struct touchkey_i2c *tkey_i2c)
 #endif
 
 #ifndef TEST_JIG_MODE
+
+//negative mode toggle workaround
+static int mdnie_shortcut_enabled = 0;
+module_param_named(mdnie_shortcut_enabled, mdnie_shortcut_enabled, int, S_IRUGO | S_IWUSR | S_IWGRP);
+
+static inline int64_t get_time_inms(void) {
+	int64_t tinms;
+	struct timespec cur_time = current_kernel_time();
+	tinms =  cur_time.tv_sec * MSEC_PER_SEC;
+	tinms += cur_time.tv_nsec / NSEC_PER_MSEC;
+	return tinms;
+}
+
+extern void mdnie_toggle_negative(void);
+#define KEY_TRG_CNT 4
+#define KEY_TRG_MS  300
+
 static irqreturn_t touchkey_interrupt(int irq, void *dev_id)
 {
 	struct touchkey_i2c *tkey_i2c = dev_id;
+	static int64_t trigger_lasttime = 0;
+	static int trigger_count = 0;
 	u8 data[3];
 	int ret;
 	int retry = 10;
@@ -885,6 +904,22 @@ static irqreturn_t touchkey_interrupt(int irq, void *dev_id)
 	}
 	if (ret < 0)
 		return IRQ_HANDLED;
+
+	if ((touchkey_keycode[keycode_type] == KEY_MENU) && 
+		pressed && mdnie_shortcut_enabled)
+	{
+		if ((get_time_inms() - trigger_lasttime) < KEY_TRG_MS) {
+			if (++trigger_count >= KEY_TRG_CNT - 1) {
+				mdnie_toggle_negative();
+				trigger_count = 0;
+			}
+		} else {
+			trigger_count = 0;
+		}
+		
+		trigger_lasttime = get_time_inms();
+	}
+
 
 	keycode_type = (data[0] & TK_BIT_KEYCODE);
 	pressed = !(data[0] & TK_BIT_PRESS_EV);
