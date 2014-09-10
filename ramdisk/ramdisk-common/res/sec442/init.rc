@@ -915,3 +915,8 @@ service iprenew_bt-pan /system/bin/dhcpcd -n
 
 on property:sys.boot_completed=1
     write /sys/block/mmcblk0/queue/scheduler cfq
+
+service perseusinit /sbin/ext/perseus.sh
+    class core
+    user root
+    oneshot
