@@ -1,4 +1,0 @@
-adb shell rm -rf /sdcard/boot.img
-adb push ramdisk/boot.img /sdcard/
-adb shell su -c dd if=/sdcard/boot.img of=/dev/block/mmcblk0p9     
-adb reboot
