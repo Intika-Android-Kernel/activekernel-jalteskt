@@ -45,6 +45,7 @@ modules.builtin
 /Module.markers
 /Module.symvers
 /zImage
+zImage
 /*zip
 /boot.img
 /CM-11-E300S-bestmjh47_kernel.zip
