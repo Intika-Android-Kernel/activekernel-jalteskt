@@ -1,5 +1,5 @@
 CONFIG_EXPERIMENTAL=y
-CONFIG_LOCALVERSION="-ActiveKernel-Multiboot-v2.0"
+CONFIG_LOCALVERSION="-ActiveKernel-Multiboot-v3.5"
 # F2FS support
 CONFIG_F2FS_FS=y
 CONFIG_F2FS_STAT_FS=y
