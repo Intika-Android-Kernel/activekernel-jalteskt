@@ -62,6 +62,9 @@ if [ -f /system/framework/allshare.jar ]; then
 
 else
 	rm -f /sbin/cbd
+
+	mv -f /res/libexynoscamera.so /system/lib
+
 	echo "2 0" > /proc/sys/kernel/runtime_dependency
 	insmod /lib/modules/dhd.ko
         cp -f /lib/modules/dhd.ko /system/lib/modules/dhd.ko
