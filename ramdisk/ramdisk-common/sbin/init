@@ -38,6 +38,9 @@ if grep -q bootmode=2 /proc/cmdline || [ -e /data/media/rebootrs ]; then
 	out
 fi
 
+# add codes that prevents bootloop when defined rom doesn't exist
+ROM=`cat /data/media/.rom`
+[ -e /data/media/.$ROMrom ] || echo 1 > /data/media/.rom
 [ -e /data/media/.rom ] || echo 1 > /data/media/.rom
 ROM=`cat /data/media/.rom`
 [ $ROM == 0 ] && ROM=1
@@ -55,10 +58,8 @@ if [ -f /system/framework/allshare.jar ]; then
 	prepareKnox
 
 	insmod /lib/modules/dhd.ko
-	mv -f /res/sec442/* /
+	cp -f /res/sec442/* /
         rm -rf /res/cm11
-        rm -rf /res/sec442
-        rm -rf /res/etc
 
 else
 	rm -f /sbin/cbd
@@ -69,7 +70,8 @@ else
 	insmod /lib/modules/dhd.ko
         cp -f /lib/modules/dhd.ko /system/lib/modules/dhd.ko
 	mv -f /res/cm11/* /
-        rm -rf /res/sec442
+# test whether below code(removes sec442 ramdisk) makes the bootloop(stock-rom-based subroms)
+#       rm -rf /res/sec442
 #       rm -rf /res/cm11
 
 fi
