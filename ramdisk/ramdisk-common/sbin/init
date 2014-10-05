@@ -40,7 +40,7 @@ fi
 
 # add codes that prevents bootloop when defined rom doesn't exist
 ROM=`cat /data/media/.rom`
-[ -e /data/media/.$ROMrom ] || echo 1 > /data/media/.rom
+[ -e /data/media/.${ROM}rom ] || echo 1 > /data/media/.rom
 [ -e /data/media/.rom ] || echo 1 > /data/media/.rom
 ROM=`cat /data/media/.rom`
 [ $ROM == 0 ] && ROM=1
