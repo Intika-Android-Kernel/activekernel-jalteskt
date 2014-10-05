@@ -33,7 +33,6 @@ cd ramdisk
 zip -r Multiboot-E300S-bestmjh47_kernel_STOCK.zip META-INF boot.img
 mv -v Multiboot-E300S-bestmjh47_kernel_STOCK.zip ../
 cd ../
-rm -rf zImage
 echo ""
 echo done! 
 
