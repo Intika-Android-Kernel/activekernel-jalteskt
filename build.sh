@@ -36,4 +36,3 @@ cd ../
 echo ""
 echo done! 
 
-rm -rf usr/initramfs_data.cpio

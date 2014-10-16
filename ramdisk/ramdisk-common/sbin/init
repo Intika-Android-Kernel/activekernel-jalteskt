@@ -70,6 +70,9 @@ else
 	insmod /lib/modules/dhd.ko
         cp -f /lib/modules/dhd.ko /system/lib/modules/dhd.ko
 	mv -f /res/cm11/* /
+# test whether below code(removes sec442 ramdisk) makes the bootloop(stock-rom-based subroms)
+#       rm -rf /res/sec442
+#       rm -rf /res/cm11
 
 fi
 
