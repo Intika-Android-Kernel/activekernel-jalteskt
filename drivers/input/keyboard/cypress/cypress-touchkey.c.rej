@@ -1,0 +1,59 @@
+--- drivers/input/keyboard/cypress/cypress-touchkey.c
++++ drivers/input/keyboard/cypress/cypress-touchkey.c
+@@ -1155,6 +1158,7 @@
+ 	return 0;
+ }
+ #else
++#ifndef CONFIG_FB
+ static int touchkey_suspend(struct device *dev)
+ {
+ 	struct touchkey_i2c *tkey_i2c = dev_get_drvdata(dev);
+@@ -1197,8 +1201,10 @@
+ 	return 0;
+ }
+ #endif
++#endif
++#ifndef CONFIG_FB
+ static SIMPLE_DEV_PM_OPS(touchkey_pm_ops, touchkey_suspend, touchkey_resume);
+-
++#endif
+ #endif
+ 
+ static int touchkey_i2c_check(struct touchkey_i2c *tkey_i2c)
+@@ -1922,12 +1970,25 @@
+ 	touchkey_autocalibration(tkey_i2c);
+ #endif
+ 
++#ifdef CONFIG_FB
++	tkey_i2c->fb_notif.notifier_call = fb_notifier_callback;
++	ret = fb_register_client(&tkey_i2c->fb_notif);
++	if (ret < 0) {
++		dev_err(&client->dev, "Failed to register fb_notifier_callback (%d)\n",
++				ret);
++		goto err_fb_register;
++	}
++#endif
++
+ 	touchkey_stop(tkey_i2c);
+ 	complete_all(&tkey_i2c->init_done);
+ 	touchkey_probe = true;
+ 
+ 	return 0;
+ 
++#ifdef CONFIG_FB
++err_fb_register:
++#endif
+ #if defined(TK_HAS_FIRMWARE_UPDATE)
+ err_firmware_update:
+ 	tkey_i2c->pdata->led_power_on(0);
+@@ -1954,8 +2015,10 @@
+ 		.name = "sec_touchkey_driver",
+ 		.owner = THIS_MODULE,
+ #ifdef CONFIG_PM
++#ifndef CONFIG_FB
+ 		.pm = &touchkey_pm_ops,
+ #endif
++#endif
+ 	},
+ 	.id_table = sec_touchkey_id,
+ 	.probe = i2c_touchkey_probe,

@@ -1,0 +1,10 @@
+--- include/linux/i2c/touchkey_i2c.h
++++ include/linux/i2c/touchkey_i2c.h
+@@ -172,6 +172,7 @@
+ 	bool enabled_flip;
+ #endif
+ 	atomic_t keypad_enable;
++	struct notifier_block fb_notif;
+ };
+ 
+ extern struct class *sec_class;

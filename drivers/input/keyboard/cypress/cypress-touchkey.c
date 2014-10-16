@@ -33,6 +33,9 @@
 #ifdef CONFIG_FB
 #include <linux/fb.h>
 #endif
+#ifdef CONFIG_FB
+#include <linux/fb.h>
+#endif
 #include <linux/io.h>
 #include <linux/regulator/consumer.h>
 #include <linux/regulator/driver.h>
@@ -1264,6 +1267,48 @@ out:
 
 	return size;
 }
+
+#ifdef CONFIG_FB
+static int fb_prev_status = FB_BLANK_NORMAL;
+
+static int fb_notifier_callback(struct notifier_block *p,
+		unsigned long event, void *data)
+{
+	struct fb_event *evdata = data;
+	int new_status;
+	struct touchkey_i2c *tkey_i2c;
+
+	if (touchkey_probe != true) {
+		printk(KERN_ERR "%s: Touchkey is not enabled.\n", __func__);
+		return 0;
+	}
+
+	if (event == FB_EVENT_BLANK) {
+		tkey_i2c = container_of(p, struct touchkey_i2c, fb_notif);
+		new_status = (*(int *)evdata->data) ?
+			FB_BLANK_NORMAL : FB_BLANK_UNBLANK;
+		if (new_status == fb_prev_status)
+			return 0;
+
+		mutex_lock(&tkey_i2c->input_dev->mutex);
+		if (new_status == FB_BLANK_UNBLANK) {
+			if (tkey_i2c->input_dev->users)
+				touchkey_start(tkey_i2c);
+			dev_info(&tkey_i2c->client->dev,
+					"%s: starting touchkey\n", __func__);
+		} else {
+			if (tkey_i2c->input_dev->users)
+				touchkey_stop(tkey_i2c);
+			dev_info(&tkey_i2c->client->dev,
+					"%s: stopping touchkey\n", __func__);
+		}
+		mutex_unlock(&tkey_i2c->input_dev->mutex);
+		fb_prev_status = new_status;
+	}
+
+	return 0;
+}
+#endif
 
 #ifdef CONFIG_FB
 static int fb_prev_status = FB_BLANK_NORMAL;
