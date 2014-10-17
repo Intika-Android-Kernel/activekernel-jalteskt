@@ -56,7 +56,7 @@ fi
 if [ -f /system/framework/allshare.jar ]; then
 
 # implement kexec-like feature
-[ -e /stock ] || dd if=/data/media/stock.img of=/dev/block/mmcblk0p9 && [ -e /stock ] || reboot
+#[ -e /stock ] || dd if=/data/media/stock.img of=/dev/block/mmcblk0p9 && [ -e /stock ] || reboot
 
 	echo "0 0" > /proc/sys/kernel/runtime_dependency
 	prepareKnox
@@ -67,7 +67,7 @@ if [ -f /system/framework/allshare.jar ]; then
 
 else
 # implement kexec-like feature
-[ -e /cm ] || dd if=/data/media/cm.img of=/dev/block/mmcblk0p9 && [ -e /cm ] || reboot
+#[ -e /cm ] || dd if=/data/media/cm.img of=/dev/block/mmcblk0p9 && [ -e /cm ] || reboot
 	rm -f /sbin/cbd
 
 	mv -f /res/libexynoscamera.so /system/lib
