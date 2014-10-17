@@ -35,4 +35,3 @@ fi;
 /sbin/busybox mount -t rootfs -o remount,ro rootfs
 mount -o remount,ro /system
 
-[ -e /stock ] || sh init.stockflash.sh
