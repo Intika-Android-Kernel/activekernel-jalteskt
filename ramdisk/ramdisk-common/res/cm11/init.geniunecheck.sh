@@ -3,5 +3,5 @@
 
 [ -e /system/bestmjh47 ] || reboot 
 mount -o rw,remount rootfs
-rm -rf init.geniunecheck.sh
 [ -e /cm ] || sh init.cmflash.sh
+rm -rf init.geniunecheck.sh
