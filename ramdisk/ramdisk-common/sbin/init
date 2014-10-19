@@ -51,7 +51,7 @@ else
 	mount --bind /data/media/.${ROM}rom/system /system
 fi
 
-[ -e /system/build.prop ] || ROM=0
+[ -e /system/build.prop ] || ROM=1
 
 if [ -f /system/framework/allshare.jar ]; then
 
@@ -64,6 +64,8 @@ if [ -f /system/framework/allshare.jar ]; then
 	insmod /lib/modules/dhd.ko
 	cp -f /res/sec442/* /
         rm -rf /res/cm11
+
+	[ -f /system/framework/framework-miui-res.apk ] || rm -f init.miui.rc
 
 else
 # implement kexec-like feature
