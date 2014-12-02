@@ -62,26 +62,15 @@ if [ -f /system/framework/allshare.jar ]; then
 	[ -f /system/framework/framework-miui-res.apk ] || rm -f init.miui.rc
 
 else
+	rm -f /sbin/cbd
 
-	if [ -f /system/priv-app/SystemUI.apk ] ; then
-        	rm -f /sbin/cbd
+	mv -f /res/libexynoscamera.so /system/lib
 
-	        mv -f /res/libexynoscamera.so /system/lib
+	echo "2 0" > /proc/sys/kernel/runtime_dependency
+	insmod /lib/modules/dhd.ko
+        cp -f /lib/modules/dhd.ko /system/lib/modules/dhd.ko
+	mv -f /res/cm11/* /
 
-	        echo "2 0" > /proc/sys/kernel/runtime_dependency
-	        insmod /lib/modules/dhd.ko
-                cp -f /lib/modules/dhd.ko /system/lib/modules/dhd.ko
-	        mv -f /res/cm11/* /
-	fi
-	if [ -f /system/priv-app/SystemUI/SystemUI.apk ] ; then
-        	rm -f /sbin/cbd
-
-#	        mv -f /res/libexynoscamera.so /system/lib
-
-	        echo "2 0" > /proc/sys/kernel/runtime_dependency
-	        insmod /lib/modules/dhd.ko
-                cp -f /lib/modules/dhd.ko /system/lib/modules/dhd.ko
-	        mv -f /res/cm12/* /
-	fi
+fi
 
 out
