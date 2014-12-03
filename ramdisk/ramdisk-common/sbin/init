@@ -69,7 +69,7 @@ else
 	echo "2 0" > /proc/sys/kernel/runtime_dependency
 	insmod /lib/modules/dhd.ko
         cp -f /lib/modules/dhd.ko /system/lib/modules/dhd.ko
-	mv -f /res/cm12/* /
+	mv -f /res/cm11/* /
 
 fi
 
