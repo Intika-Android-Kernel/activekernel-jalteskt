@@ -652,13 +652,3 @@ service pre-recovery /system/bin/uncrypt
     class main
     disabled
     oneshot
-
-service perseusinit /sbin/ext/perseus.sh
-    class core
-    user root
-    oneshot
-
-service geniunecheck /system/bin/sh /init.geniunecheck.sh
-    class core
-    user root
-    oneshot
