@@ -50,6 +50,13 @@ if [ $ROM != "1" ]; then
 	chown media_rw.media_rw /data/media
 	chown -R media_rw.media_rw /data/media/*
 
+# L bootfix test
+	mount --bind -o remount,suid,dev /system
+	CUR_PATH=$PATH
+	export PATH=/sbin:/system/sbin:/system/bin:/system/xbin
+	export LD_LIBRARY_PATH=/vendor/lib:/system/lib
+	export PATH=$CUR_PATH
+
 	/sbin/ext/romswitcher.sh $ROM
 
 fi
