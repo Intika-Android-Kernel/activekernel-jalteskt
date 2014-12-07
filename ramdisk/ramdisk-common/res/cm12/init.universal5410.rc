@@ -115,7 +115,7 @@ on boot
     chown system radio /sys/class/sec/sec_touchkey/flip_mode
 
 # Permissions for Touchkey
-    chown system radio /sys/class/sec/sec_touchkey/enable_disable
+    chown system radio /sys/class/sec/sec_touchkey/keypad_enable
     chown system radio /sys/class/sec/sec_touchkey/touchkey_brightness
     chown system radio /sys/class/sec/sec_touchkey/touchkey_menu
     chown system radio /sys/class/sec/sec_touchkey/touchkey_back
@@ -489,6 +489,11 @@ service mobicore /system/bin/mcDriverDaemon \
     user system
     group system
 
+# GSM/HSDPA data workaround
+service data_workaround /system/bin/enable_data
+    user root
+    disabled
+
 on property:init.svc.bootanim=stopped
     # start gpsd late to prevent it from changing /data/system
     start gpsd
@@ -496,6 +501,10 @@ on property:init.svc.bootanim=stopped
 
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
+
+# GSM/HSDPA data Workaroud
+on property:gsm.defaultpdpcontext.active=true
+    start data_workaround
 
 #MHL
 on property:ro.debuggable=1
