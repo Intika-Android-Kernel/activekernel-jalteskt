@@ -24,11 +24,6 @@ echo 70 > /sys/class/devfreq/exynos5-busfreq-mif/time_in_state/upthreshold
 ln -s /res/synapse/uci /sbin/uci
 /sbin/uci
 
-# Android L test
-#mkdir -p /mnt/ntfs
-#chmod 777 /mnt/ntfs
-#mount -o mode=0777,gid=1000 -t tmpfs tmpfs /mnt/ntfs
-
 if [ -d /system/etc/init.d ]; then
 	/sbin/busybox run-parts /system/etc/init.d
 fi;
