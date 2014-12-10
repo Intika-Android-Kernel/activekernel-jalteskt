@@ -35,6 +35,21 @@ on init
 
     symlink /sys/devices/platform/s5p-ehci/ehci_power /dev/ehci_power
 
+on charger
+    # Disable extra CPUs
+    write /sys/devices/system/cpu/cpu1/online 0
+    write /sys/devices/system/cpu/cpu2/online 0
+    write /sys/devices/system/cpu/cpu3/online 0
+    chmod 444 /sys/devices/system/cpu/cpu1/online
+    chmod 444 /sys/devices/system/cpu/cpu2/online
+    chmod 444 /sys/devices/system/cpu/cpu3/online
+
+    # CPU Frequency Governor
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor powersave
+
+    # EHCI runtime enable for LPA
+    write /sys/devices/platform/s5p-ehci/power/control auto
+
 on fs
     mount_all /fstab.universal5410
     exec /sbin/ext/mount_partitions.sh
@@ -115,7 +130,7 @@ on boot
     chown system radio /sys/class/sec/sec_touchkey/flip_mode
 
 # Permissions for Touchkey
-    chown system radio /sys/class/sec/sec_touchkey/enable_disable
+    chown system radio /sys/class/sec/sec_touchkey/keypad_enable
     chown system radio /sys/class/sec/sec_touchkey/touchkey_brightness
     chown system radio /sys/class/sec/sec_touchkey/touchkey_menu
     chown system radio /sys/class/sec/sec_touchkey/touchkey_back
@@ -420,12 +435,17 @@ on boot
 
 # Service begin here
 
+service charger /sbin/healthd -c
+    class charger
+    critical
+    seclabel u:r:healthd:s0
+
 # Set watchdog timer to 30 seconds and pet it every 10 seconds to get a 20 second margin
 service watchdogd /sbin/watchdogd 10 20
     class core
 
 # 3D init
-service pvrsrvctl /system/vendor/bin/pvrsrvctl --start --no-module
+service pvrsrvctl /system/bin/pvrsrvctl
     class core
     user root
     group root
@@ -443,7 +463,7 @@ service fuse_usbdisk /system/bin/sdcard -u 1023 -g 1023 /mnt/media_rw/usbdisk /s
     class late_start
     disabled
 
-service cpboot-daemon /system/bin/cbd -d -t ss222 -b s -m c -p 13 -o r
+service cpboot-daemon /system/bin/cbd -d -txmm626 -bh -mh -p 13
     class main
     user root
     group radio cache inet misc audio sdcard_rw log sdcard_r shell
@@ -489,19 +509,22 @@ service mobicore /system/bin/mcDriverDaemon \
     user system
     group system
 
+# GSM/HSDPA data workaround
+service data_workaround /system/bin/enable_data
+    user root
+    disabled
+
 on property:init.svc.bootanim=stopped
     # start gpsd late to prevent it from changing /data/system
     start gpsd
     start camera_id
 
-# DMB support for cyanogenmod-based roms
-service dmb /system/bin/dmbserver
-    class main
-    user system
-    group radio inet misc audio camera graphics net_bt net_bt_admin sdcard_rw sdcard_r shell
-
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
+
+# GSM/HSDPA data Workaroud
+on property:gsm.defaultpdpcontext.active=true
+    start data_workaround
 
 #MHL
 on property:ro.debuggable=1
