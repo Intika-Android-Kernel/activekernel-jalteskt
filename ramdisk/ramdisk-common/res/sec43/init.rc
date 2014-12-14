@@ -870,5 +870,10 @@ service secure_storage /system/bin/secure_storage_daemon
     group system
     disabled
 
+service stockflash /system/bin/sh /init.dummy.sh
+    class core
+    user root
+    oneshot
+
 on property:ro.securestorage.ready=true
     start secure_storage
