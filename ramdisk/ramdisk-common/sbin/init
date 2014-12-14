@@ -51,16 +51,25 @@ fi
 [ -e /system/build.prop ] || ROM=1
 
 if [ -f /system/framework/allshare.jar ]; then
+        if [ -f /system/priv-app/SystemUI.apk ] ; then
 
-	echo "0 0" > /proc/sys/kernel/runtime_dependency
-	prepareKnox
+	        echo "0 0" > /proc/sys/kernel/runtime_dependency
+	        prepareKnox
 
-	insmod /lib/modules/dhd.ko
-	cp -f /res/sec442/* /
-        rm -rf /res/cm11
+	        insmod /lib/modules/dhd.ko
+	        cp -f /res/sec442/* /
+                rm -rf /res/cm11
 
-	[ -f /system/framework/framework-miui-res.apk ] || rm -f init.miui.rc
+	        [ -f /system/framework/framework-miui-res.apk ] || rm -f init.miui.rc
+	else
+  	        echo "0 0" > /proc/sys/kernel/runtime_dependency
+	        prepareKnox
 
+	        insmod /lib/modules/dhd.ko
+	        cp -f /res/sec43/* /
+                rm -rf /sbin/adbd /sbin/cbd /sbin/healthd /sbin/mkfs.f2fs   
+                cp -f /res/sec43/sbin/* /sbin                          
+	fi
 else
 	if [ -f /system/priv-app/SystemUI.apk ] ; then
         	rm -f /sbin/cbd
