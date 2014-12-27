@@ -83,6 +83,7 @@ else
 	fi
 	if [ -f /system/priv-app/SystemUI/SystemUI.apk ] ; then
         	rm -f /sbin/cbd
+                mv -f /res/libexynoscamera.so /system/lib
                 rm -rf /sbin/adbd /sbin/healthd /sbin/mkfs.f2fs
                 cp -f /res/cm12/sbin/* /sbin
 		echo "2 0" > /proc/sys/kernel/runtime_dependency
