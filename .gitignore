@@ -150,3 +150,6 @@ security/selinux/av_permissions.h
 security/selinux/flask.h
 usr/gen_init_cpio
 usr/initramfs_data.cpio
+ramdisk/boot.img
+ramdisk/data/media/cm.img
+ramdisk/data/media/stock.img
