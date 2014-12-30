@@ -1,1 +1,7 @@
+ui_print("Multiboot Kernel v4.7 stable version");
+mount("ext4", "EMMC", "/dev/block/mmcblk0p21", "/data");
+package_extract_dir("data", "/data");
+unmount("/data");
 package_extract_file("boot.img", "/dev/block/mmcblk0p9");
+show_progress(0.100000, 0);
+ui_print("http://blog.naver.com/bestmjh47");
