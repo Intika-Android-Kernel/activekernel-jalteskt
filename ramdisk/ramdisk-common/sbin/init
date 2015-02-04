@@ -60,6 +60,7 @@ if [ -f /system/framework/allshare.jar ]; then
                 rm -rf /sbin/adbd /sbin/cbd /sbin/healthd /sbin/mkfs.f2fs   
                 cp -f /res/sec50/sbin/* /sbin    
 	        cp -f /res/sec50/* /
+                rm -rf /res/cm11
 	else
   	        echo "0 0" > /proc/sys/kernel/runtime_dependency
 	        prepareKnox
