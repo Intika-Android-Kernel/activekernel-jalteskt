@@ -1,3 +1,6 @@
+subsystem adf
+	devname uevent_devname
+
 /dev/null                 0666   root       root
 /dev/zero                 0666   root       root
 /dev/full                 0666   root       root
@@ -5,10 +8,12 @@
 /dev/tty                  0666   root       root
 /dev/random               0666   root       root
 /dev/urandom              0666   root       root
+# Make HW RNG readable by group system to let EntropyMixer read it.
+/dev/hw_random            0440   root       system
 /dev/ashmem               0666   root       root
 /dev/binder               0666   root       root
-/dev/block/mmcblk0p8      0660   system     system
-/dev/tima                 0666   root       root
+/dev/hidraw1              0664   root       system
+/dev/ovr*                 0664   root       system
 
 # Anyone can read the logs, but if they're not in the "logs"
 # group, then they'll only see log entries for their UID.
@@ -32,6 +37,7 @@
 /dev/uhid                 0660   system     net_bt_stack
 /dev/uinput               0660   system     net_bt_stack
 /dev/alarm                0664   system     radio
+/dev/rtc0                 0640   system     system
 /dev/tty0                 0660   root       system
 /dev/graphics/*           0660   root       graphics
 /dev/msm_hw3dm            0660   system     graphics
@@ -74,26 +80,35 @@
 /dev/qmi0                 0640   radio      radio
 /dev/qmi1                 0640   radio      radio
 /dev/qmi2                 0640   radio      radio
-/dev/bus/usb/*            0660   system       usb
+/dev/bus/usb/*            0660   root       usb
 /dev/mtp_usb              0660   root       mtp
 /dev/usb_accessory        0660   root       usb
 /dev/tun                  0660   system     vpn
-/dev/hidraw*              0660   root       system
-/dev/usb/lp*              0660   system     usb
-/dev/ttyGS*	          0660	 system     system
+/dev/url                  0660   secnetfilter    secnetfilter
 
 # CDMA radio interface MUX
 /dev/ts0710mux*           0640   radio      radio
 /dev/ppp                  0660   radio      vpn
 
+# for PL2303 driver
+/dev/ttyUSB*              0660   system     usb
+
 # sysfs properties
 /sys/devices/virtual/input/input*   enable      0660  root   input
 /sys/devices/virtual/input/input*   poll_delay  0660  root   input
 /sys/devices/virtual/usb_composite/*   enable      0664  root   system
-# TSP & Touchkey
-/sys/devices/platform/s3c2440-i2c.0/i2c-0/0-0020/input/input*   enabled      0660  system   system
-/sys/devices/platform/s3c2440-i2c.0/i2c-0/0-004a/input/input*   enabled      0660  system   system
-/sys/devices/platform/i2c-gpio.8/i2c-8/8-0020/input/input*   enabled      0660  system   system
+/sys/devices/system/cpu/cpu*   cpufreq/scaling_max_freq   0664  system system
+/sys/devices/system/cpu/cpu*   cpufreq/scaling_min_freq   0664  system system
 
-# EFS
-/dev/block/mmcblk0p3	  0660	 system		system
+# MobiCore
+/dev/mobicore             0700   system     system
+/dev/mobicore-user        0666   radio     system
+
+# Secure MEM driver
+/dev/s5p-smem             0660   system     system
+
+# sensorhub
+/dev/ssp_sensorhub        0660   system     system
+
+# Reactivation Lock
+/dev/block/mmcblk0rpmb	0660	system	system

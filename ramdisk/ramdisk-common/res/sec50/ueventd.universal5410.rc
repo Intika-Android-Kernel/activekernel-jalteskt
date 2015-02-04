@@ -4,6 +4,10 @@
 /dev/ion                  0666   system     system
 /dev/video6               0660   media      media
 /dev/video7               0660   media      media
+/dev/video8               0660   media      media
+/dev/video9               0660   media      media
+
+
 
 # gscalers
 /dev/video23              0660   media      graphics
@@ -37,6 +41,8 @@
 /dev/video48              0660   media      media
 /dev/media2               0660   media      media
 
+
+
 # mixer
 /dev/video16              0660   system     audio
 /dev/video17              0660   system     system
@@ -64,12 +70,7 @@
 
 /dev/ttySAC*	          0660	 root	 system
 /dev/umts*                0660   system     radio
-/dev/block/mmcblk0p8      0660   system     root
 /dev/block/mmcblk0p13     0660   system     radio
-/dev/block/mmcblk0p4      0660   system     radio
-/dev/block/mmcblk0p5      0660   system     radio
-/dev/block/mmcblk0p6      0660   system     radio
-/dev/block/mmcblk0p14     0660   system     radio
 
 # USB Acessory
 /dev/ttyUSB*              0660   system     usb
@@ -77,3 +78,8 @@
 
 #ALP Audio
 /dev/srp                  0660   system     audio
+
+# Secure MEM driver
+/dev/s5p-smem             0660   system     system
+
+/dev/block/mmcblk0p8      0660   system     system
