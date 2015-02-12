@@ -67,6 +67,8 @@ on post-fs-data
 
     mkdir /efs/imei 0775 radio system
 
+    setprop vold.post_fs_data_done 1
+
 # create data/gps for GPS daemon
     mkdir /data/system/gps 771 gps system
 
@@ -479,11 +481,6 @@ service mobicore /system/bin/mcDriverDaemon \
     user system
     group system
 
-# GSM/HSDPA data workaround
-service data_workaround /system/bin/enable_data
-    user root
-    disabled
-
 on property:init.svc.bootanim=stopped
     # start gpsd late to prevent it from changing /data/system
     start gpsd
@@ -492,10 +489,6 @@ on property:init.svc.bootanim=stopped
 on property:ro.dumpstate.dmesg=1
     write /proc/sys/kernel/dmesg_restrict 0
 
-# GSM/HSDPA data Workaroud
-on property:gsm.defaultpdpcontext.active=true
-    start data_workaround
-
 #MHL
 on property:ro.debuggable=1
     chmod 666 /sys/class/mhl/hdcp_support
@@ -503,3 +496,17 @@ on property:ro.debuggable=1
     chmod 666 /sys/class/mhl/timing
 on property:ro.debuggable=1
     chmod 666 /sys/class/mhl/swing
+
+# CyanogenMod Performance Profiles
+# Powersave
+on property:sys.perf.profile=0
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor powersave
+
+# Balanced
+on property:sys.perf.profile=1
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
+
+# Performance
+on property:sys.perf.profile=2
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+
