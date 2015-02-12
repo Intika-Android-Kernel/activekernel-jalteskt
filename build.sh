@@ -9,7 +9,7 @@ rm -rf *.zip
 rm -rf ramdisk/*.gz
 rm -rf ramdisk/*.img
 rm -rf ramdisk/*.zip
-TOOLCHAINPATH=/$HOME/toolchain/arm-eabi-5.0/bin
+TOOLCHAINPATH=/$HOME/toolchain/arm-eabi-4.7/bin
 export ARCH=arm
 export CROSS_COMPILE=$TOOLCHAINPATH/arm-eabi-
 make bestmjh47_defconfig
