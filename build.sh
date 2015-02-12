@@ -9,7 +9,7 @@ rm -rf *.zip
 rm -rf ramdisk/*.gz
 rm -rf ramdisk/*.img
 rm -rf ramdisk/*.zip
-TOOLCHAINPATH=/$HOME/toolchain/arm-eabi-4.7/bin
+TOOLCHAINPATH=/$HOME/toolchain/arm-eabi-5.0/bin
 export ARCH=arm
 export CROSS_COMPILE=$TOOLCHAINPATH/arm-eabi-
 make bestmjh47_defconfig
@@ -33,8 +33,8 @@ cp -f ramdisk/boot.img ramdisk/data/media/stock.img
 cp -f ramdisk/boot.img $HOME/kernel/cm11_*/ramdisk/data/media/stock.img
 cp -f ramdisk/boot.img $HOME/kernel/cm11_*/ramdisk/boot.img
 cd ramdisk
-zip -r Multiboot_kernel_e300_v4.7.zip META-INF data boot.img
-mv -v Multiboot_kernel_e300_v4.7.zip ../
+zip -r Multiboot_kernel_e300_v5.0.zip META-INF data boot.img
+mv -v Multiboot_kernel_e300_v5.0.zip ../
 cd ../
 echo done! 
 

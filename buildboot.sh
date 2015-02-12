@@ -6,6 +6,6 @@ cp -f ramdisk/boot.img ramdisk/data/media/stock.img
 cp -f ramdisk/boot.img $HOME/kernel/cm11_*/ramdisk/data/media/stock.img
 cp -f ramdisk/boot.img $HOME/kernel/cm11_*/ramdisk/boot.img
 cd ramdisk
-zip -r Multiboot_kernel_e300_v4.7.zip META-INF data boot.img
-mv -v Multiboot_kernel_e300_v4.7.zip ../
+zip -r Multiboot_kernel_e300_v5.0.zip META-INF data boot.img
+mv -v Multiboot_kernel_e300_v5.0.zip ../
 cd ../
