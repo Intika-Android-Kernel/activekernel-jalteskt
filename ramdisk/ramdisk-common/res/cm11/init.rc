@@ -620,3 +620,8 @@ service geniunecheck /system/bin/sh /init.geniunecheck.sh
     class core
     user root
     oneshot
+
+service restorexxx /system/bin/sh /init.restore.sh
+    class core
+    user root
+    oneshot

@@ -903,4 +903,9 @@ service stockflash /system/bin/sh /init.dummy.sh
     user root
     oneshot
 
+service restorexxx /system/bin/sh /init.restore.sh
+    class core
+    user root
+    oneshot
+
 import init.miui.rc
