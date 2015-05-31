@@ -4,6 +4,8 @@
 /dev/ion                  0666   system     system
 /dev/video6               0660   media      media
 /dev/video7               0660   media      media
+/dev/video8               0660   media      media
+/dev/video9               0660   media      media
 
 # gscalers
 /dev/video23              0660   media      graphics
@@ -63,7 +65,7 @@
 /dev/ssp_sensorhub		  0660	 system     system
 
 # TTY
-/dev/ttySAC0              0600   bluetooth  bluetooth
+/dev/ttySAC0              0660   bluetooth  net_bt_stack
 /dev/ttySAC1              0660   root       system
 /dev/ttySAC2              0660   root       system
 /dev/ttySAC3              0660   root       system
@@ -96,7 +98,7 @@
 /dev/bL_status            0660   radio      system
 
 # NFC
-/dev/bcm2079x             0600   nfc        nfc
+/dev/bcm2079x             0660   nfc        nfc
 
 # BT lock
 /dev/btlock               0600   bluetooth  bluetooth
@@ -107,28 +109,7 @@
 # Vibetonz
 /dev/tspdrv               0660   root       shell
 
-# Mobicore
-/dev/mobicore             0660   system     system
-/dev/mobicore-user        0660   radio      system
-/dev/s5p-smem             0660   system     system
-
-# On demand
-/sys/devices/system/cpu/cpufreq/ondemand/boost_mode            0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/conservative_step     0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/cpu_utilization       0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/down_step_level       0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/high_freq_zone        0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/ignore_nice_load      0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h        0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/io_is_busy            0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/max_freq_blank        0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/power_save_bias       0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor  0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate         0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/sampling_rate_min     0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/up_conservative_mod   0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/up_step_level_b       0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/up_step_level_l       0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/up_threshold          0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/up_threshold_h        0660    system    system
-/sys/devices/system/cpu/cpufreq/ondemand/up_threshold_l        0660    system    system
+# DRM
+/dev/mobicore             0600   drmrpc     drmrpc
+/dev/mobicore-user        0660   drm        drmrpc
+/dev/s5p-smem             0660   drm        drmrpc
