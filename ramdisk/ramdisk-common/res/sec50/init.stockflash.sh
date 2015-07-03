@@ -1,4 +1,4 @@
 #!/sbin/busybox sh
 cd /
-dd if=/data/media/stock.img of=/dev/block/mmcblk0p9 
+dd if=/data/media/lollipop.img of=/dev/block/mmcblk0p9 
 reboot
