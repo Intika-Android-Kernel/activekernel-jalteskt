@@ -1,9 +1,6 @@
 import init.universal5410.usb.rc
 import init.wifi.rc
 
-on early-init
-    mount debugfs /sys/kernel/debug /sys/kernel/debug
-
 on init
 
     mkdir /preload 0771 system system
@@ -57,7 +54,7 @@ on init
     restorecon /dev/mbin0
     symlink /sys/devices/platform/s5p-ehci/ehci_power /dev/ehci_power
 
-    symlink /dev/block/mmcblk0p8 /dev/block/param
+	symlink /dev/block/mmcblk0p8 /dev/block/param
 
 on post-fs-data
     mkdir /data/media 0770 media_rw media_rw
@@ -85,17 +82,43 @@ on post-fs-data
     mkdir /efs/drm 0774 drm system
     mkdir /efs/drm/playready 0775 drm system
 
+#skt except scan list
+    chmod 0644 /data/misc/wifi/hiddenAPs.txt
+
+# for SKT TBASED
+    mkdir /data/tbased 0775 root wifi
+    chown root wifi /data/tbased
+    chmod 0775 /data/tbased
+
+    chown wifi wifi /system/lib/libiwlan_module.so
+    chmod 0644 /system/lib/libiwlan_module.so
+    chmod 0755 /system/bin/tbased
+
+# SKT PM PlayReady
+    mkdir /data/playready 771 system skt
+    chown system skt /data/playready
+    chmod 0771 /data/playready
+
+# SKT DRM for hoppin
+    mkdir /data/data/.sktdrm 0775
+    chown system radio /data/data/.sktdrm
+    chmod 0775 /data/data/.sktdrm
+    
     # Permissions for Camera to flush cache buffers
     chown system system /sys/devices/virtual/sec/sec_misc/drop_caches
 
+# SKT TBASE
+service tbased /system/bin/tbased
+    class main
+    user root
+    oneshot
+    
 on boot
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
     # setprop ro.radio.noril yes
 
     # Reduce reserved lowmem from ~48MB to ~12MB
-    write /proc/sys/vm/lowmem_reserve_ratio "96 96"
-	
-	# Increase min_free_kbytes from 3183 to 5120
-    write /proc/sys/vm/min_free_kbytes 5120
+    write /proc/sys/vm/lowmem_reserve_ratio "32 32"
 
     # Set up kernel tracing, but disable it by default
     chmod 0222 /sys/kernel/debug/tracing/trace_marker
@@ -132,6 +155,21 @@ on boot
     chmod 0660 /sys/class/input/input13/enabled
     chown system system /sys/class/input/input15/enabled
     chmod 0660 /sys/class/input/input15/enabled
+    chown system system /sys/class/input/input16/enabled
+    chmod 0660 /sys/class/input/input16/enabled
+    chown system system /sys/class/input/input17/enabled
+    chmod 0660 /sys/class/input/input17/enabled
+    chown system system /sys/class/input/input18/enabled
+    chmod 0660 /sys/class/input/input18/enabled
+    chown system system /sys/class/input/input19/enabled
+    chmod 0660 /sys/class/input/input19/enabled
+
+ # tdmb
+    chown system system /dev/tdmb
+    chmod 0660 /dev/tdmb
+
+# Permissions for usb_lock
+    chown system radio /sys/class/sec/switch/.usb_lock/enable
 
 # Permissions for gpio_keys
     chown radio system /sys/class/sec/sec_key/wakeup_keys
@@ -166,12 +204,6 @@ on fs
     chown radio radio /sys/devices/virtual/misc/multipdp/waketime
     chmod 0660 /sys/devices/virtual/misc/umts_dm0/dm_state
     chown radio system /sys/devices/virtual/misc/umts_dm0/dm_state
-    
-    # Support Preload install apks
-    wait /dev/block/platform/dw_mmc.0/by-name/HIDDEN
-    mount ext4 /dev/block/platform/dw_mmc.0/by-name/HIDDEN /preload nosuid nodev ro barrier=1
-    setprop storage.preload.complete 1
-    
 
 # Permissions for backlight
     chmod 0660 /sys/class/backlight/pwm-backlight.0/brightness
@@ -470,7 +502,7 @@ service pvrsrvctl /system/vendor/bin/pvrsrvctl --start --no-module
     user root
     group root
     oneshot
-
+    
 # virtual sdcard daemon running as media_rw (1023)
 service sdcard /system/bin/sdcard -u 1023 -g 1023 -l -r /data/media /mnt/shell/emulated
     class late_start
@@ -480,7 +512,6 @@ service fuse_extSdCard /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d -f /mnt/med
     class late_start
     disabled
     oneshot
-
 
 service fuse_UsbDriveA /system/bin/sdcard -u 1023 -g 1023 -d -f /mnt/media_rw/UsbDriveA /storage/UsbDriveA
     class late_start
@@ -515,6 +546,9 @@ service fuse_UsbDriveF /system/bin/sdcard -u 1023 -g 1023 -d -f /mnt/media_rw/Us
 # NFC
     chmod 0600 /dev/pn547
     chown nfc nfc /dev/pn547
+
+# FingerPrint_sensor
+    chown system system /sys/class/fingerprint/fingerprint/ocp_check
 
 # Set watchdog timer to 30 seconds and pet it every 10 seconds to get a 20 second margin
 service watchdogd /sbin/watchdogd 10 20
@@ -573,6 +607,12 @@ service scranton_RD /system/bin/scranton_RD
 on property:sys.mobicoredaemon.enable=true
     start scranton_RD
 
+# deferred initcall
+service sec-sh /system/bin/sh /system/etc/init.sec.boot.sh
+    class main
+    user root
+    oneshot
+
 # on userdebug and eng builds, enable kgdb on the serial console
 on property:ro.debuggable=1
     write /sys/module/kgdboc/parameters/kgdboc ttyFIQ1
@@ -617,6 +657,43 @@ service TvoutService_C /system/bin/bintvoutservice
 on property:ro.SecEDS.enable=false
     stop TvoutService_C
 
+# umount service
+service umount_service /system/bin/umount /preload
+    disabled
+    oneshot
+
+on property:persist.sys.storage_preload=1
+    mount ext4 /dev/block/mmcblk0p16 /preload nosuid nodev noatime wait ro
+    setprop storage.preload.complete 1
+
+on property:persist.sys.storage_preload=0
+    start umount_service
+
+# Support silent logging
+    mkdir /data/log 0775 system log
+    mkdir /data/misc/dhcp 0775 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+    chmod 0777 /system/bin/diagexe
+    chmod 0755 /system/bin/ddexe
+    chmod 0755 /system/bin/smdexe
+
+# DIAG
+service DIAG-daemon /system/bin/diagexe
+    class main
+    user root
+    group system radio inet net_raw
+
+service dmb /system/bin/dmbserver
+    class main
+    user media
+    group system radio inet misc audio camera graphics net_bt net_bt_admin sdcard_rw sdcard_r shell media_rw
+
+on post-fs-data
+# MOBILE OFFICE Permanent memory access
+    mkdir /efs/security 0771 root root
+    chown radio system /efs/security
+    chmod 0771 /efs/security
+
 # SSWAP
 service swapon /sbin/sswap -s
     class core
@@ -624,18 +701,3 @@ service swapon /sbin/sswap -s
     group root
     seclabel u:r:sswap:s0
     oneshot
-
-service DR-daemon /system/bin/ddexe
-    class main
-    user root
-    group system radio inet net_raw
-
-service SMD-daemon /system/bin/smdexe
-    class main
-    user root
-    group system radio inet net_raw
-
-service BCS-daemon /system/bin/connfwexe
-    class main
-    user root
-    group system radio inet net_raw
